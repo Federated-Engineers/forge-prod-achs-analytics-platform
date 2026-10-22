@@ -1,7 +1,7 @@
 resource "aws_iam_openid_connect_provider" "github_oidc" {
   url             = "https://token.actions.githubusercontent.com"
   client_id_list  = ["sts.amazonaws.com"]
-  thumbprint_list = ["6938fd4d98bab03faadb97b34396831e3780aea1"] # Standard GitHub Actions thumbprint
+  thumbprint_list = ["6938fd4d98bab03faadb97b34396831e3780aea1"] 
 }
 
 resource "aws_iam_role" "github_actions_role" {
@@ -18,7 +18,6 @@ resource "aws_iam_role" "github_actions_role" {
         }
         Condition = {
           StringEquals = {
-            # STRICT SECURITY - Only allow specific repository to assume this role
             "token.actions.githubusercontent.com:aud" : "sts.amazonaws.com",
           }
           StringLike = {
@@ -40,13 +39,11 @@ resource "aws_iam_policy" "github_ecr_push_policy" {
     Version = "2012-10-17"
     Statement = [
       {
-        # GetAuthorizationToken cannot be scoped to a specific resource
         Effect   = "Allow"
         Action   = "ecr:GetAuthorizationToken"
         Resource = "*"
       },
       {
-        # Strictly scoped to your specific achs-dbt-core repository
         Effect = "Allow"
         Action = [
           "ecr:BatchCheckLayerAvailability",
@@ -82,7 +79,6 @@ resource "aws_iam_policy" "github_tf_state_policy" {
     Version = "2012-10-17"
     Statement = [
       {
-        # Permissions for the S3 State Bucket
         Effect = "Allow"
         Action = [
           "s3:ListBucket",

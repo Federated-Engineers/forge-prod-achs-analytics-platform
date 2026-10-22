@@ -22,24 +22,3 @@ variable "project" {
   default     = "Federated-Engineers"
 }
 
-# variable "snowflake_password" {
-#   description = "Password into the snowflake account"
-#   type = string
-#   sensitive = true
-
-#   validation {
-#     condition = length(trimspace(var.snowflake_password)) > 0
-#     error_message = "please provide snowflake password"
-#   }
-# }
-
-# variable "snowflake_private_key" {
-#   description = "PEM private key for the TERRAFORM_SVC Snowflake user"
-#   type        = string
-#   sensitive   = true
-#
-#   validation {
-#     condition     = length(trimspace(var.snowflake_private_key)) > 0
-#     error_message = "snowflake_private_key is empty. Set the SNOWFLAKE_PRIVATE_KEY GitHub secret (repository secret, full PEM)."
-#   }
-# }

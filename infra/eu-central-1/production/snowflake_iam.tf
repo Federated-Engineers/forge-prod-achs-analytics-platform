@@ -95,27 +95,3 @@ resource "null_resource" "update_snowflake_trust_policy" {
 }
 }
 
-
-
-# resource "aws_iam_role" "snowflake_role" {
-#   name = "snowflake-role"
-
-#   # Updated trust policy referencing the Snowflake integration outputs
-#   assume_role_policy = jsonencode({
-#     Version = "2012-10-17"
-#     Statement = [
-#       {
-#         Effect = "Allow"
-#         Principal = {
-#           AWS = snowflake_storage_integration_aws.achs_s3_integration.describe_output[0].iam_user_arn
-#         }
-#         Action = "sts:AssumeRole"
-#         Condition = {
-#           StringEquals = {
-#             "sts:ExternalId" = snowflake_storage_integration_aws.achs_s3_integration.describe_output[0].external_id
-#           }
-#         }
-#       }
-#     ]
-#   })
-# }
