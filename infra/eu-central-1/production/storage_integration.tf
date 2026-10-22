@@ -1,8 +1,8 @@
 resource "snowflake_storage_integration_aws" "achs_s3_integration" {
-  name             = "ACHS_S3_INTEGRATION"
-  comment          = "Storage integration for ACHS raw JSON dumps"
-  enabled          = true
-  storage_provider = "S3"
+  name                      = "ACHS_S3_INTEGRATION"
+  comment                   = "Storage integration for ACHS raw JSON dumps"
+  enabled                   = true
+  storage_provider          = "S3"
   storage_aws_role_arn      = local.snowflake_role_arn
   storage_allowed_locations = ["s3://angel-city-health-data/"]
 }
