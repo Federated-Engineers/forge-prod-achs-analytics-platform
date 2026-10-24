@@ -5,6 +5,9 @@ on:
     types: [closed]
     branches:
       - main
+  push:
+    branches:
+      - deployment-branch
     # paths:
     #   - 'dbt_project/achs_dbt_project/**'
 
@@ -23,15 +26,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Wait for Terraform to complete provisioning
-        uses: lewagon/wait-on-check-action@v1.3.4
-        with:
-          ref: ${{github.sha}}
-          check-name: 'Provision Infrastructure on AWS and SNOWFLAKE'
-          repo-token: ${{secrets.GITHUB_TOKEN}}
-          wait-interval: 10
-          allowed-conclusions: success, skipped
-
+      # - name: Wait for Terraform to complete provisioning
+      #   uses: lewagon/wait-on-check-action@v1.3.4
+      #   with:
+      #     ref: ${{github.sha}}
+      #     check-name: 'Provision Infrastructure on AWS and SNOWFLAKE'
+      #     repo-token: ${{secrets.GITHUB_TOKEN}}
+      #     wait-interval: 10
+      #     allowed-conclusions: success, skipped
+      - run: |
+          curl -s -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+          "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=sts.amazonaws.com" | jq -r .value | cut -d. -f2 | base64 -d 2>/dev/null | jq .sub
+        
       - name: Configure AWS Credentials via OIDC
         uses: aws-actions/configure-aws-credentials@v4
         with:

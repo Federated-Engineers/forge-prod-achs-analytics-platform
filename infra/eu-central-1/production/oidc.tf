@@ -20,7 +20,8 @@ resource "aws_iam_role" "github_actions_role" {
             "token.actions.githubusercontent.com:aud" : "sts.amazonaws.com",
           }
           StringLike = {
-            "token.actions.githubusercontent.com:sub" : "repo:Federated-Engineers@242844222/forge-prod-achs-analytics-platform@1413578751:ref:refs/heads/main"
+            "token.actions.githubusercontent.com:sub" : ["repo:Federated-Engineers@242844222/forge-prod-achs-analytics-platform@1413578751:ref:refs/heads/main",
+            "repo:Federated-Engineers@242844222/forge-prod-achs-analytics-platform@1413578751:ref:refs/heads/deployment-branch"]
           }
         }
       }
