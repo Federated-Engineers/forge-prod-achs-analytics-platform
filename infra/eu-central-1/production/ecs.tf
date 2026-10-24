@@ -78,3 +78,10 @@ resource "aws_ecs_task_definition" "dbt_task" {
     }
   ])
 }
+
+
+resource "aws_vpc_security_group_egress_rule" "ecs_all_out" {
+  security_group_id = "sg-0b65fc4de73b84f1a"
+  ip_protocol       = "-1"
+  cidr_ipv4         = "0.0.0.0/0"
+}
