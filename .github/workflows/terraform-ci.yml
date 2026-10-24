@@ -9,50 +9,71 @@ on:
       - main
     # paths:
     #   - 'infra/eu-central-1/production/**'
-# REQUIRED: Grant GitHub permission to mint the OIDC token
-permissions:
-  id-token: write 
-  contents: read
+# # REQUIRED: Grant GitHub permission to mint the OIDC token
+# permissions:
+#   id-token: write 
+#   contents: read
 
-env:
-  SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
-  SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
-  SNOWFLAKE_PRIVATE_KEY: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
-  TF_VAR_snowflake_private_key: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
+# env:
+#   SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+#   SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
+#   SNOWFLAKE_PRIVATE_KEY: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
+#   TF_VAR_snowflake_private_key: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
+
+# jobs:
+#   terraform:
+#     name: Provision Infrastructure on AWS and SNOWFLAKE
+#     runs-on: ubuntu-latest
+#     defaults:
+#       run:
+#         working-directory: ./infra/eu-central-1/production
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v4.2.2
+
+#       # - name: Configure AWS Credentials via OIDC
+#       #   uses: aws-actions/configure-aws-credentials@v6.3.0
+#       #   with:
+#       #     role-to-assume: arn:aws:iam::206617159067:role/achs-github-actions-role
+#       #     aws-region: eu-central-1
+
+#       - name: Set up Terraform
+#         uses: hashicorp/setup-terraform@v3
+
+#       # - name: Terraform Init
+#       #   run: terraform init
+
+#       - name: Terraform Format Check
+#         run: terraform fmt -check
+#         continue-on-error: false
+      
+#       - name: Terraform Validate
+#         run: terraform validate
+
+#       # - name: Terraform Plan
+#       #   run: terraform plan
+      
+#       # - name: Terraform Apply
+#       #   if: github.ref == 'refs/heads/main'&&github.event_name == 'push'
+#       #   run: terraform apply -auto-approve
+
+
 
 jobs:
-  terraform:
-    name: Provision Infrastructure on AWS and SNOWFLAKE
+  ci:
+    name: ci
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./infra/eu-central-1/production
+    timeout-minutes: 10
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4.2.2
+      - name: Check out repository code
+        uses: actions/checkout@v3
 
-      - name: Configure AWS Credentials via OIDC
-        uses: aws-actions/configure-aws-credentials@v6.3.0
+      - name: terraform fmt
+        uses: dflook/terraform-fmt-check@v1
         with:
-          role-to-assume: arn:aws:iam::206617159067:role/achs-github-actions-role
-          aws-region: eu-central-1
+          path: ./infra/eu-central-1/production
 
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v3
-
-      - name: Terraform Init
-        run: terraform init
-
-      - name: Terraform Format Check
-        run: terraform fmt -check
-        continue-on-error: false
-      
-      - name: Terraform Validate
-        run: terraform validate
-
-      - name: Terraform Plan
-        run: terraform plan
-      
-      - name: Terraform Apply
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: terraform apply -auto-approve
+      - name: terraform validate
+        uses: dflook/terraform-validate@v2
+        with:
+          path: ./infra/eu-central-1/production

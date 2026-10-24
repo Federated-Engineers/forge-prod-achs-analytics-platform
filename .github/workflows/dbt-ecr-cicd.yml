@@ -2,9 +2,7 @@ name: DBT ECR CI/CD
 
 on:
   pull_request:
-    # paths:
-    #   - 'dbt_project/achs_dbt_project/**'
-  push:
+    types: [closed]
     branches:
       - main
     # paths:
@@ -37,7 +35,7 @@ jobs:
       - name: Configure AWS Credentials via OIDC
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::206617159067:role/achs-github-actions-role
+          role-to-assume: arn:aws:iam::049417293525:role/achs-github-actions-role
           aws-region: eu-central-1
 
       - name: Login to Amazon ECR

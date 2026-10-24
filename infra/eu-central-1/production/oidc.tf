@@ -1,7 +1,6 @@
-resource "aws_iam_openid_connect_provider" "github_oidc" {
-  url             = "https://token.actions.githubusercontent.com"
-  client_id_list  = ["sts.amazonaws.com"]
-  thumbprint_list = ["6938fd4d98bab03faadb97b34396831e3780aea1"] # Standard GitHub Actions thumbprint
+# The GitHub OIDC provider already exists in this account (one per URL per account)
+data "aws_iam_openid_connect_provider" "github_oidc" {
+  url = "https://token.actions.githubusercontent.com"
 }
 
 resource "aws_iam_role" "github_actions_role" {
@@ -14,15 +13,14 @@ resource "aws_iam_role" "github_actions_role" {
         Action = "sts:AssumeRoleWithWebIdentity"
         Effect = "Allow"
         Principal = {
-          Federated = aws_iam_openid_connect_provider.github_oidc.arn
+          Federated = data.aws_iam_openid_connect_provider.github_oidc.arn
         }
         Condition = {
           StringEquals = {
-            # STRICT SECURITY - Only allow specific repository to assume this role
             "token.actions.githubusercontent.com:aud" : "sts.amazonaws.com",
           }
           StringLike = {
-            "token.actions.githubusercontent.com:sub" : "repo:Celnet-hub@55122878/FE-Forge-ACHS-Analytics-Platform@1409818033:ref:refs/heads/main"
+            "token.actions.githubusercontent.com:sub" : "repo:Federated-Engineers@242844222/forge-prod-achs-analytics-platform@1413578751:ref:refs/heads/main"
           }
         }
       }
@@ -40,13 +38,11 @@ resource "aws_iam_policy" "github_ecr_push_policy" {
     Version = "2012-10-17"
     Statement = [
       {
-        # GetAuthorizationToken cannot be scoped to a specific resource
         Effect   = "Allow"
         Action   = "ecr:GetAuthorizationToken"
         Resource = "*"
       },
       {
-        # Strictly scoped to your specific achs-dbt-core repository
         Effect = "Allow"
         Action = [
           "ecr:BatchCheckLayerAvailability",
@@ -82,7 +78,6 @@ resource "aws_iam_policy" "github_tf_state_policy" {
     Version = "2012-10-17"
     Statement = [
       {
-        # Permissions for the S3 State Bucket
         Effect = "Allow"
         Action = [
           "s3:ListBucket",

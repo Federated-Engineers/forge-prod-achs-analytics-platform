@@ -15,12 +15,11 @@ provider "aws" {
 }
 
 provider "snowflake" {
-  organization_name = local.snowflake_tags.organization
-  account_name      = local.snowflake_tags.account
-  user              = "TERRAFORM_SVC"
-  role              = "SYSADMIN"
-  authenticator     = "SNOWFLAKE_JWT"
-  private_key       = var.snowflake_private_key
+  organization_name        = local.snowflake_tags.organization
+  account_name             = local.snowflake_tags.account
+  user                     = "TERRAFORM_SVC"
+  role                     = "SYSADMIN"
+  preview_features_enabled = ["snowflake_table_resource"]
 }
 
 # will be used to manage Snowflake users and roles via the USERADMIN role
@@ -30,6 +29,4 @@ provider "snowflake" {
   user              = "TERRAFORM_SVC"
   role              = "USERADMIN"
   alias             = "useradmin"
-  authenticator     = "SNOWFLAKE_JWT"
-  private_key       = var.snowflake_private_key
 }

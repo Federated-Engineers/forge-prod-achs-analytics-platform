@@ -9,5 +9,7 @@ locals {
     organization = "fncwxve"
     account      = "uu56570"
   }
+
+  raw_tables = toset(["PATIENTS", "PROVIDERS", "CLAIMS", "ENCOUNTERS", "DIAGNOSES"])
 }
 
