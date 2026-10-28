@@ -22,7 +22,7 @@ provider "snowflake" {
   preview_features_enabled = ["snowflake_table_resource"]
 }
 
-# will be used to manage Snowflake users and roles via the USERADMIN role
+
 provider "snowflake" {
   organization_name = local.snowflake_tags.organization
   account_name      = local.snowflake_tags.account

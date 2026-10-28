@@ -7,8 +7,9 @@ achs_dbt_project:
       authenticator: username_password_mfa
       account: FNCWXVE-UU56570
       user: ECS_DBT_USER
+      # # password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
       database: ACHS_ANALYTICS
       warehouse: ACHS_DBT_WH
       schema: STAGING
       role: ECS_DBT_ROLE
-      private_key: "{{ env_var('private_key') }}"
+      private_key: "{{ env_var('SNOWFLAKE_PRIVATE_KEY') }}"
