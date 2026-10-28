@@ -5,9 +5,9 @@ on:
     types: [closed]
     branches:
       - main
-  # push:
-  #   branches:
-  #     - deployment-branch
+  push:
+    branches:
+      - deployment-branch
 
 permissions:
   id-token: write
